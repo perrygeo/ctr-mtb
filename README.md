@@ -2,6 +2,11 @@
 
 Colorado Trail Race map.
 
+https://perrygeo.github.io/ctr-mtb/
+
+
+## Running
+
 Install `varnish` and run as a proxy to cache the elevation tiles
 
 ```bash
