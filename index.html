@@ -143,7 +143,6 @@
         };
 
         function initializeMlineUI(data) {
-            console.log(data);
             // Add an image to use as a custom marker
             map.loadImage(
                 // 'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
@@ -236,7 +235,6 @@
                         'id': String(new Date().getTime())
                     }
                 };
-                console.log(point);
             });
         });
 
@@ -284,8 +282,6 @@
                 // Convert m dim from meters to miles
                 return { m: s.m / 1609.344, label: s.label }
             });
-            // console.log(data);
-            // console.log(newSegments);
             // Add the segments
             svg.selectAll(".node").data(newSegments)
                 .enter()
