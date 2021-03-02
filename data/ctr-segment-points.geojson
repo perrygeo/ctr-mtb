@@ -1,0 +1,33 @@
+{
+"type": "FeatureCollection",
+"name": "ctr-segment-points",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "category": "segment", "label": "1" }, "geometry": { "type": "Point", "coordinates": [ -105.167864503266259, 39.400663132094287 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "2" }, "geometry": { "type": "Point", "coordinates": [ -105.257865456732489, 39.345534324955075 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "3" }, "geometry": { "type": "Point", "coordinates": [ -105.401366901239513, 39.338401359313579 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "Lost Creek" }, "geometry": { "type": "Point", "coordinates": [ -105.687458942915441, 39.362466425325565 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "5" }, "geometry": { "type": "Point", "coordinates": [ -105.75890351669446, 39.413031616244119 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "6" }, "geometry": { "type": "Point", "coordinates": [ -106.035148232480381, 39.542457780997651 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "7" }, "geometry": { "type": "Point", "coordinates": [ -106.135875818515061, 39.49253739400757 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "8" }, "geometry": { "type": "Point", "coordinates": [ -106.311370952806143, 39.36259926274257 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "9" }, "geometry": { "type": "Point", "coordinates": [ -106.350060136728146, 39.350609187050907 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "Holy Cross" }, "geometry": { "type": "Point", "coordinates": [ -106.418897625997516, 39.151372912785178 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "11" }, "geometry": { "type": "Point", "coordinates": [ -106.282878532080275, 39.021626400022789 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "Collegiate" }, "geometry": { "type": "Point", "coordinates": [ -106.279848968737468, 38.812721434414883 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "13" }, "geometry": { "type": "Point", "coordinates": [ -106.200222637225977, 38.716420255930096 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "14" }, "geometry": { "type": "Point", "coordinates": [ -106.242664191270009, 38.543187909255757 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "15" }, "geometry": { "type": "Point", "coordinates": [ -106.247433332650957, 38.39529337983177 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "16" }, "geometry": { "type": "Point", "coordinates": [ -106.378743577626153, 38.290830686672017 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "17" }, "geometry": { "type": "Point", "coordinates": [ -106.591375618903854, 38.223276873533223 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "18" }, "geometry": { "type": "Point", "coordinates": [ -106.689089720952907, 38.150319871380638 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "La Garita" }, "geometry": { "type": "Point", "coordinates": [ -107.158871425119301, 37.939979716726157 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "22" }, "geometry": { "type": "Point", "coordinates": [ -107.367125566864388, 37.855753371252924 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "23" }, "geometry": { "type": "Point", "coordinates": [ -107.545936603096393, 37.79443159511078 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "Weminuche" }, "geometry": { "type": "Point", "coordinates": [ -107.6983215528914, 37.739616671952213 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "25" }, "geometry": { "type": "Point", "coordinates": [ -107.903463462016163, 37.713265607149957 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "26" }, "geometry": { "type": "Point", "coordinates": [ -107.956930195039916, 37.649875840453163 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "27" }, "geometry": { "type": "Point", "coordinates": [ -108.011227882632312, 37.451538296784669 ] } },
+{ "type": "Feature", "properties": { "category": "segment", "label": "28" }, "geometry": { "type": "Point", "coordinates": [ -107.902492933047398, 37.331415920293367 ] } }
+]
+}

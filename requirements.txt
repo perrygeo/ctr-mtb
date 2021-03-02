@@ -1,0 +1,5 @@
+mercantile
+shapely
+numpy
+rasterio
+pyproj

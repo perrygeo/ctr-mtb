@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <title>AugmentGeo</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no" />
+    <script src="https://api.mapbox.com/mapbox-gl-js/v2.1.0/mapbox-gl.js"></script>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v2.1.0/mapbox-gl.css" rel="stylesheet" />
+    <link href="https://cdn.rawgit.com/novus/nvd3/v1.8.1/build/nv.d3.css" rel="stylesheet" />
+    <style>
+        /* body {
+            margin: 12px;
+            padding: 0;
+            background-color: black;
+        } */
+
+        html,
+        body {
+            max-width: 100%;
+            overflow-x: hidden;
+            background-color: white;
+        }
+
+        #map {
+            position: absolute;
+            top: 400px;
+            bottom: 0px;
+            right: 5px;
+            width: 100%;
+            z-index: -1;
+        }
+
+        .chart {
+            height: 210px;
+            width: 700px;
+            color: #fff;
+            font-size: 11px;
+            line-height: 12px;
+
+        }
+
+        .clear {
+            background-color: #555;
+            color: #ccc;
+            border: none;
+            padding: 3px 6px;
+            text-align: center;
+            text-decoration: none;
+            float: right;
+            font-size: 12px;
+        }
+
+        #distance {
+            color: #fff;
+            font-size: 12px;
+            line-height: 18px;
+            display: block;
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+
+        .distance-container {
+            position: absolute;
+            top: 0px;
+            left: 0px;
+            height: 400px;
+            width: 100%;
+            z-index: 1;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-size: 11px;
+            line-height: 18px;
+            display: block;
+            margin: 0;
+            padding: 5px 10px;
+            border-radius: 3px;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="distance-container" class="distance-container">
+        <h1> Colorado Trail (MTB Edition) </h1>
+        <div id="elevchart"> </div>
+    </div>
+    <div id="map"></div>
+
+    <!-- <script src="https://npmcdn.com/@turf/turf@5.1.6/turf.min.js"></script> -->
+    <script src="https://d3js.org/d3.v6.js"></script>
+
+    <script>
+        // set the dimensions and margins of the graph
+        var margin = { top: 10, right: 10, bottom: 20, left: 50 },
+            width = 1280 - margin.left - margin.right,
+            height = 180 - margin.top - margin.bottom;
+
+        // append the svg object to the body of the page
+        var svg = d3.select("#elevchart")
+            .append("svg")
+            .attr("width", width + margin.left + margin.right)
+            .attr("height", height + margin.top + margin.bottom)
+            .append("g")
+            .attr("transform",
+                "translate(" + margin.left + "," + margin.top + ")");
+
+        mapboxgl.accessToken = 'pk.eyJ1IjoicGVycnlnZW8iLCJhIjoiNjJlNTZmNTNjZTFkZTE2NDUxMjg2ZDg2ZDdjMzI5NTEifQ.-f-A9HuHrPZ7fHhlZxYLHQ';
+        var map = new mapboxgl.Map({
+            container: 'map',
+            zoom: 2,
+            center: [-95, 38],
+            pitch: 00,
+            bearing: 0,
+            // style: 'mapbox://styles/mapbox/satellite-v9'
+            style: 'mapbox://styles/mapbox/outdoors-v11'
+            // style: 'mapbox://styles/mapbox/dark-v10'
+        });
+        var distanceContainer = document.getElementById('distance');
+
+        // GeoJSON object to hold our measurement features
+        var geojson = {
+            'type': 'FeatureCollection',
+            'features': []
+        };
+
+        // Used to draw a line between points
+        var linestring = {
+            'type': 'Feature',
+            'geometry': {
+                'type': 'LineString',
+                'coordinates': [[-105.0, 40], [-105.1, 40.1], [-105.2, 40.2], [-105.2, 41.2]]
+            }
+        };
+        var mlineFeatureCollection = {
+            'type': 'FeatureCollection',
+            'features': []
+        };
+        var segmentFeatureCollection = {
+            'type': 'FeatureCollection',
+            'features': []
+        };
+
+        function initializeMlineUI(data) {
+            console.log(data);
+            // Add an image to use as a custom marker
+            map.loadImage(
+                // 'https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png',
+                '/ellipses.png',
+                function (error, image) {
+                    if (error) throw error;
+                    map.addImage('custom-marker', image);
+                    map.addLayer({
+                        'id': 'segment-layer',
+                        'type': 'symbol',
+                        'source': 'segments',
+                        'layout': {
+                            'icon-image': 'custom-marker',
+                            // get the title name from the source's "label" property
+                            'text-field': ['get', 'label'],
+                            'text-offset': [0.5, -0.5],
+                            'text-size': 14,
+                            "text-anchor": "bottom-left",
+                        },
+                        'paint': {
+                            'text-halo-color': '#fff',
+                            'text-halo-blur': 4,
+                            'text-color': '#444',
+                            'text-halo-width': 2,
+                        }
+                    });
+                }
+            );
+            map.setPitch(15);
+            map.fitBounds(data.bounds, { padding: 28 });
+
+            mlineFeatureCollection.features.push(data.line_feature)
+            map.addSource('mline', {
+                'type': 'geojson',
+                'data': mlineFeatureCollection
+            });
+            map.addLayer({
+                id: 'measure-lines',
+                type: 'line',
+                source: 'mline',
+                layout: {
+                    'line-cap': 'round',
+                    'line-join': 'round',
+                },
+                paint: {
+                    'line-color': '#444',
+                    'line-opacity': 1.0,
+                    'line-width': 1.5,
+                    // "line-dasharray": [1, 2]
+                },
+                filter: ['in', '$type', 'LineString']
+            });
+
+            addElevationsToChart(data.melevations, data.msegments);
+
+            // add segment points
+            segmentFeatureCollection.features = data.segment_features;
+            map.addSource('segments', {
+                'type': 'geojson',
+                'data': segmentFeatureCollection
+            });
+        }
+
+        map.on('load', function () {
+            // Fetch mline data
+            const url = '/data/ctr-mline.json';
+            const options = { method: 'GET' }
+            fetch(url, options)
+                .then(res => res.json())
+                .then(data => initializeMlineUI(data));
+
+            // Add DEM terrain
+            map.addSource('mapbox-dem', {
+                'type': 'raster-dem',
+                'url': 'mapbox://mapbox.mapbox-terrain-dem-v1',
+                'tileSize': 512,
+                'maxzoom': 14
+            });
+            map.setTerrain({ 'source': 'mapbox-dem', 'exaggeration': 1.5 });
+
+            // Click Handler
+            map.on('click', function (e) {
+                var point = {
+                    'type': 'Feature',
+                    'geometry': {
+                        'type': 'Point',
+                        'coordinates': [e.lngLat.lng, e.lngLat.lat]
+                    },
+                    'properties': {
+                        'id': String(new Date().getTime())
+                    }
+                };
+                console.log(point);
+            });
+        });
+
+        function clearLine() {
+            distanceContainer.innerHTML = '';
+            geojson.features = [];
+            map.getSource('geojson').setData(geojson);
+            addElevationsToChart([]);
+        };
+
+        function addElevationsToChart(elevations, segments) {
+            // Convert meters/meters to miles/ft
+            data = elevations.map(function (d) {
+                return { m: d.m / 1609.344, z: d.z * 3.28084 }
+            });
+            // Add X (m) axis
+            var m = d3.scaleLinear()
+                .domain(d3.extent(data, function (d) { return d.m; }))
+                .range([width, 0]);  // reversed so that chart matches E-W orientation of Colorado Trail
+
+            svg.append("g")
+                .attr("transform", "translate(0," + height + ")")
+                .call(d3.axisBottom(m));
+
+            // Add Y (z) axis
+            var z = d3.scaleLinear()
+                .domain(d3.extent(data, function (d) { return d.z; }))
+                .range([height, 0]);
+
+            svg.append("g")
+                .call(d3.axisLeft(z));
+
+            // Add the line
+            svg.append("path")
+                .datum(data)
+                .attr("fill", "none")
+                .attr("stroke", "#9a9")
+                .attr("stroke-width", 1.0)
+                .attr("d", d3.line()
+                    .x(function (d) { return m(d.m); })
+                    .y(function (d) { return z(d.z); })
+                )
+
+            newSegments = segments.map(function (s) {
+                // Convert m dim from meters to miles
+                return { m: s.m / 1609.344, label: s.label }
+            });
+            // console.log(data);
+            // console.log(newSegments);
+            // Add the segments
+            svg.selectAll(".node").data(newSegments)
+                .enter()
+                .append("text")
+                .attr("x", function (d) { return m(d.m) })
+                .attr("y", z(5800))
+                .attr('transform', 'translate(5, 0)')
+                .style("fill", "lightblue")
+                .text(function (d) {
+                    if (d.label == "9") {
+                        return "";
+                    }
+                    return d.label.substring(0, 4);
+                });
+
+            svg.selectAll(".node").data(newSegments)
+                .enter()
+                .append('line')
+                .style("stroke", "grey")
+                .style("stroke-width", 1)
+                .style("stroke-opacity", 0.3)
+                .attr("x1", function (d) { return m(d.m); })
+                .attr("y1", 0)
+                .attr("x2", function (d) { return m(d.m); })
+                .attr("y2", height);
+        }
+    </script>
+
+</body>
+
+</html>
